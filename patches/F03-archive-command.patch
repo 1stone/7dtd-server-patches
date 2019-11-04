@@ -1,0 +1,69 @@
+--- /dev/null	2019-01-08 21:38:57.057956152 +0100
++++ /usr/local/lib/7dtd/commands/archive.sh	2018-11-01 12:46:50.000000000 +0100
+@@ -0,0 +1,65 @@
++#!/bin/bash
++
++#   Copyright 2018 Joerg Delker
++#
++#   Licensed under the Apache License, Version 2.0 (the "License");
++#   you may not use this file except in compliance with the License.
++#   You may obtain a copy of the License at
++#
++#       http://www.apache.org/licenses/LICENSE-2.0
++#
++#   Unless required by applicable law or agreed to in writing, software
++#   distributed under the License is distributed on an "AS IS" BASIS,
++#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++#   See the License for the specific language governing permissions and
++#   limitations under the License.
++
++
++# Archive game data files.
++# Basically, this does a normal backup and copies it to an archive folder
++
++sdtdCommandArchive() {
++	if [ $(isValidInstance $1) -eq 0 ]; then
++		echo "No instance given or not a valid instance!"
++		return
++	fi
++
++	# perform backup
++	sdtdCommandBackup
++
++	if [ ! -d $SDTD_ARCHIVE_ROOT ]; then
++		# Create new backup dir
++		mkdir $SDTD_ARCHIVE_ROOT
++	fi
++
++	# find latest backup
++	unset -v LatestBackup
++	local fileI
++	for fileI in $(find "$SDTD_BACKUP_ROOT" -mindepth 1 -maxdepth 1 -type d); do
++		if [ "$fileI" -nt "$LatestBackup" ]; then
++			LatestBackup=$fileI
++		fi
++	done
++
++	# copy backup to archive
++	if [ -d "$LatestBackup" ]; then
++		dirname=`basename $LatestBackup`
++		mkdir $SDTD_ARCHIVE_ROOT/$dirname
++		cp -al "$LatestBackup/$1" $SDTD_ARCHIVE_ROOT/$dirname
++
++		if [ -n "$2" ]; then
++			ln -sr $SDTD_ARCHIVE_ROOT/$dirname $SDTD_ARCHIVE_ROOT/$2
++		fi
++	fi
++}
++
++sdtdCommandArchiveHelp() {
++	echo "Usage: $(basename $0) archive [link]"
++	echo
++	echo "Perform a backup and archive it into the archive folder."
++	echo "If a link is specified, the archive will be linked to that name."
++}
++
++sdtdCommandArchiveDescription() {
++	echo "Archive a backup"
++}
+

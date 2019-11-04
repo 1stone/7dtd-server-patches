@@ -1,0 +1,19 @@
+--- /usr/local/lib/7dtd/commands/start.sh.orig	2019-03-09 23:34:06.200512770 +0100
++++ /usr/local/lib/7dtd/commands/start.sh	2019-03-09 23:35:59.075983397 +0100
+@@ -63,8 +63,13 @@
+ 			SERVER_EXE="7DaysToDieServer.x86"
+ 		fi
+ 
+-		
+-		LC_ALL=C LD_LIBRARY_PATH=$SDTD_BASE/engine $SSD --start $SSD_PID $SSD_DAEMON $SSD_USER --chdir $SDTD_BASE/engine --exec $SDTD_BASE/engine/$SERVER_EXE -- $OPTS > $(getInstancePath $1)/logs/stdout.log 2>&1
++		# added by JD@2018-11-04
++		ENGINE_DIR=$SDTD_BASE/engine
++		if [ -d $ENGINE_DIR.$1 ]; then
++			ENGINE_DIR=$ENGINE_DIR.$1
++		fi
++
++		LC_ALL=C LD_LIBRARY_PATH=$ENGINE_DIR $SSD --start $SSD_PID $SSD_DAEMON $SSD_USER --chdir $ENGINE_DIR --exec $ENGINE_DIR/$SERVER_EXE -- $OPTS > $(getInstancePath $1)/logs/stdout.log 2>&1
+ 		sleep 1
+ 
+ 		for H in $(getHooksFor serverPostStart $1); do
+

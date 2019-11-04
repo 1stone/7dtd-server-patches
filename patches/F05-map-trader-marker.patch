@@ -1,0 +1,75 @@
+--- /home/sdtd/engine/Mods/Allocs_WebAndMapRendering/webserver/js/map.js.orig	2019-11-04 09:10:00.324962465 +0100
++++ /home/sdtd/engine/Mods/Allocs_WebAndMapRendering/webserver/js/map.js	2019-11-04 09:22:05.923091510 +0100
+@@ -159,10 +159,15 @@
+ 	if (HasPermission ("webapi.getlandclaims")) {
+ 		layerControl.addOverlay (GetLandClaimsLayer (map, mapinfo), "Land claims");
+ 		layerCount++;
+ 	}
+ 	
++	if(HasPermission ("web.map")) {
++		layerControl.addOverlay (GetTraderMarkerLayer (map, mapinfo), "Traders");
++		layerCount++;
++	}
++	
+ 	if (HasPermission ("webapi.gethostilelocation")) {
+ 		layerControl.addOverlay (hostilesMarkerGroup, "Hostiles (<span id='mapControlHostileCount'>0</span>)");
+ 		layerCount++;
+ 	}
+ 	
+@@ -585,6 +590,56 @@
+ 		InitMap ();
+ 	});
+ }
+ 
+ 
++function GetTraderMarkerLayer (map, mapinfo) {
++	
++	var traderMarkerGroup = L.layerGroup();
++	
++	// Trader icon
++	var traderIcon = L.icon({
++	    iconUrl: '/static/leaflet/images/trader.png',
++	    iconRetinaUrl: '/static/leaflet/images/trader.png',
++	    iconSize: [25, 26],
++	    iconAnchor: [12, 13],
++	    popupAnchor: [0, -10],
++		correction: [20, 18]
++	});
++		
++	var setTraderMarkers = function(xml, decorationname, icon) {
++		traderMarkerGroup.clearLayers();
++		
++		var $xml = $(xml);
++		var $decoration = $xml.find("decoration[name*='"+decorationname+"']");
++		$decoration.each( function(key, val){
++			var position = $(this).attr("position").split(",");
++			var marker;
++			if (icon.options.hasOwnProperty('correction')){
++				position [0] = String(parseInt(position [0])+icon.options.correction[0]);
++				position [2] = String(parseInt(position [2])+icon.options.correction[1]);
++			}
++			marker = L.marker([position[0], position[2]], {icon: icon});
++			marker.bindPopup("Trader");
++			traderMarkerGroup.addLayer(marker);
++		});
++	}
+ 
++	var updateTraderMarkerEvent = function() {
++		$.ajax({
++		type: "GET",
++		url: "prefabs.xml",
++		dataType: "xml",
++		success: function(xml) {
++			setTraderMarkers(xml, "trader", traderIcon);
++			}
++		});
++	}
++		
++	map.on('overlayadd', function(e) {
++		if (e.layer == traderMarkerGroup) {
++			updateTraderMarkerEvent();
++		}
++	});
++
++	return traderMarkerGroup;
++}

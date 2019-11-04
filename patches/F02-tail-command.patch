@@ -1,0 +1,51 @@
+--- /dev/null	2019-01-08 21:38:57.057956152 +0100
++++ /usr/local/lib/7dtd/commands/tail.sh	2018-11-03 17:03:15.000000000 +0100
+@@ -0,0 +1,47 @@
++#!/bin/bash
++
++#   Copyright 2018 Joerg Delker
++#
++#   Licensed under the Apache License, Version 2.0 (the "License");
++#   you may not use this file except in compliance with the License.
++#   You may obtain a copy of the License at
++#
++#       http://www.apache.org/licenses/LICENSE-2.0
++#
++#   Unless required by applicable law or agreed to in writing, software
++#   distributed under the License is distributed on an "AS IS" BASIS,
++#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++#   See the License for the specific language governing permissions and
++#   limitations under the License.
++
++
++# tails the 7dtd instance log.
++
++sdtdCommandTail() {
++	if [ $(isValidInstance $1) -eq 0 ]; then
++		echo "No instance given or not a valid instance!"
++		return
++	fi
++
++	LOG=$(getInstancePath $1)/logs/current_output_log.txt
++	tail -F $LOG
++}
++
++sdtdCommandTailHelp() {
++	echo "Usage: $(basename $0) taillog <instance>"
++	echo
++	echo "Tails the instance log."
++}
++
++sdtdCommandTailDescription() {
++	echo "Tails the given instance"
++}
++
++sdtdCommandStartExpects() {
++	case $1 in
++		2)
++			echo "! $(getInstanceList)"
++			;;
++	esac
++}
++
+

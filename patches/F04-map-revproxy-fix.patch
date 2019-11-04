@@ -1,0 +1,36 @@
+--- /home/sdtd/engine/Mods/Allocs_WebAndMapRendering/webserver/js/map.js.orig	2019-11-04 08:55:37.606663379 +0100
++++ /home/sdtd/engine/Mods/Allocs_WebAndMapRendering/webserver/js/map.js	2019-11-04 08:56:16.831855778 +0100
+@@ -49,8 +49,8 @@
+ 
+ 	// player icon
+ 	var playerIcon = L.icon({
+-	    iconUrl: '/static/leaflet/images/marker-survivor.png',
+-	    iconRetinaUrl: '/static/leaflet/images/marker-survivor-2x.png',
++	    iconUrl: 'leaflet/images/marker-survivor.png',
++	    iconRetinaUrl: 'leaflet/images/marker-survivor-2x.png',
+ 	    iconSize: [25, 48],
+ 	    iconAnchor: [12, 24],
+ 	    popupAnchor: [0, -20]
+@@ -58,8 +58,8 @@
+ 	
+ 	// hostile icon
+ 	var hostileIcon = L.icon({
+-	    iconUrl: '/static/leaflet/images/marker-zombie.png',
+-	    iconRetinaUrl: '/static/leaflet/images/marker-zombie-2x.png',
++	    iconUrl: 'leaflet/images/marker-zombie.png',
++	    iconRetinaUrl: 'leaflet/images/marker-zombie-2x.png',
+ 	    iconSize: [25, 33],
+ 	    iconAnchor: [12, 16],
+ 	    popupAnchor: [0, -10]
+@@ -67,8 +67,8 @@
+ 	
+ 	// animal icon
+ 	var animalIcon = L.icon({
+-	    iconUrl: '/static/leaflet/images/marker-animal.png',
+-	    iconRetinaUrl: '/static/leaflet/images/marker-animal-2x.png',
++	    iconUrl: 'leaflet/images/marker-animal.png',
++	    iconRetinaUrl: 'leaflet/images/marker-animal-2x.png',
+ 	    iconSize: [25, 26],
+ 	    iconAnchor: [12, 13],
+ 	    popupAnchor: [0, -10]
+ 
